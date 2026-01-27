@@ -4,9 +4,9 @@
 #   -lrgbmatrix
 ##
 OBJECTS=gpio.o led-matrix.o options-initialize.o framebuffer.o \
-        thread.o bdf-font.o graphics.o led-matrix-c.o hardware-mapping.o \
-        pixel-mapper.o multiplex-mappers.o \
-	content-streamer.o
+	thread.o bdf-font.o graphics.o led-matrix-c.o hardware-mapping.o \
+	pixel-mapper.o multiplex-mappers.o \
+	content-streamer.o content-streamer-c.o
 
 TARGET=librgbmatrix
 
@@ -172,7 +172,17 @@ DEFINES+=$(USER_DEFINES)
 
 DEFINES+=-DDEFAULT_HARDWARE='"$(HARDWARE_DESC)"'
 INCDIR=../include
-CFLAGS=-W -Wall -Wextra -Wno-unused-parameter -O3 -g -fPIC $(DEFINES)
+
+# When cross-compiling for aarch64 (e.g. using aarch64-linux-gnu-g++),
+# the compiler does not accept '-march=native' or '-mtune=native'. Detect
+# that situation and avoid those flags. For native builds keep the flags.
+ifneq (,$(findstring aarch64-linux-gnu,$(CXX)))
+CPU_ARCH_FLAGS=
+else
+CPU_ARCH_FLAGS=-march=native -mtune=native
+endif
+
+CFLAGS=-W -Wall -Wextra -Wno-unused-parameter -O3 $(CPU_ARCH_FLAGS) -flto=2 -g -fPIC $(DEFINES)
 CXXFLAGS=$(CFLAGS) -fno-exceptions -std=c++11
 
 all : $(TARGET).a $(TARGET).so.1
@@ -181,7 +191,7 @@ $(TARGET).a : $(OBJECTS)
 	$(AR) rcs $@ $^
 
 $(TARGET).so.1 : $(OBJECTS)
-	$(CXX) -shared -Wl,-soname,$@ -o $@ $^ -lpthread  -lrt -lm -lpthread
+	$(CXX) -shared -flto=2 -Wl,-soname,$@ -o $@ $^ -lpthread  -lrt -lm -lpthread
 
 led-matrix.o: led-matrix.cc $(INCDIR)/led-matrix.h
 thread.o : thread.cc $(INCDIR)/thread.h
