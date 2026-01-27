@@ -46,8 +46,8 @@ python_add_library(graphics STATIC graphics.cpp)
 set_target_properties(graphics PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(graphics PRIVATE ../../../include)
 python_add_library(pyrgbmatrix MODULE core graphics WITH_SOABI)
-
-# install(TARGETS pyrgbmatrix DESTINATION ${SKBUILD_PLATLIB_DIR})
+target_include_directories(pyrgbmatrix PRIVATE ../../../include ./shims)
+install(TARGETS pyrgbmatrix DESTINATION ${SKBUILD_PLATLIB_DIR})
 # install(TARGETS core graphics DESTINATION . }
 
 # Build core
