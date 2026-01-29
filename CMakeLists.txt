@@ -15,7 +15,7 @@ add_subdirectory(lib) #add_library(librgbmatrix.so SHARED lib)
 # Build the Python Bindings
 # This part doesn't work, it can't find the previously build package. Excluding it will build
 # a package that just contains the static C++ library, which isn't what we need.
-#python_add_library(rgbmatrix_python_bindings MODULE WITH_SOABI)
-#set_property(TARGET rgbmatrix_python_bindings PROPERTY OUTPUT_NAME rgbmatrix)
-#add_subdirectory(bindings/python/rgbmatrix)
+python_add_library(rgbmatrix_python_bindings MODULE WITH_SOABI)
+set_property(TARGET rgbmatrix_python_bindings PROPERTY OUTPUT_NAME rgbmatrix)
+add_subdirectory(bindings/python/rgbmatrix)
 
