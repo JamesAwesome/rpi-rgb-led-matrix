@@ -1,21 +1,19 @@
-# this is the cmake file for the rgbmatrix library
+# RGBMATRIX library cmake
+
 # Build with some guidance from
 # - https://github.com/scikit-build/scikit-build-sample-projects/
 # - https://runebook.dev/en/docs/cmake/command/install
 
 cmake_minimum_required(VERSION 3.22)
 project(
-    rgbmatrix
-    VERSION "0.0.0"
-    LANGUAGES CXX
-)
-
+    rgbmatrixlib
+    VERSION "0.0.1"
+    LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(CMakePrintHelpers) # so we can print cmake variable values
 
 cmake_print_variables(CMAKE_CURRENT_SOURCE_DIR)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -fPIC -std=c++11")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
 
@@ -50,25 +48,21 @@ set(RGBMATRIX_SOURCES
 cmake_print_variables(RGBMATRIX_SOURCES)
 
 # Declare the library
-add_library(rgbmatrix SHARED ${RGBMATRIX_SOURCES})
+if(PROJECT_IS_TOP_LEVEL)
+    add_library(rgbmatrixlib)
+endif()
 
-# see https://stackoverflow.com/questions/25676277/cmake-target-include-directories-prints-an-error-when-i-try-to-add-the-source
-# for more on these generator expressions, $<INSTALL_INTERFACE, etc.
+# Add the sources
+target_sources(rgbmatrixlib PRIVATE ${RGBMATRIX_SOURCES})
 
 # Add include directories
-target_include_directories(rgbmatrix PUBLIC
+target_include_directories(rgbmatrixlib PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include> )
-#    $<INSTALL_INTERFACE:include>  # <prefix>/include
-#    )
 
-# target_include_directories(rgbmatrix PUBLIC $<INSTALL_INTERFACE:include>)
-
+# Install the library.
 install(
-    TARGETS rgbmatrix
-    EXPORT rgbmatrix_targets
-    # ARCHIVE DESTINATION "lib"
-    # LIBRARY DESTINATION "lib"
-    # COMPONENT library
+    TARGETS rgbmatrixlib
+    EXPORT rgbmatrixlibTargets
     FILE_SET HEADERS
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -76,34 +70,37 @@ install(
     INCLUDES DESTINATION include
 )
 
-#install(
-#    FILES ${RGBMATRIX_CORE_HEADERS}
-#    DESTINATION "../include"
-#)
-
-# Export the file for use by bindings.
-#install(EXPORT rgbmatrix_targets
-#    FILE librgbmatrix.cmake
-#    NAMESPACE rgbmatrix_targets.cmake
-#    DESTINATION share/rgbmatrix)
-
-###########################################
+####
 #
-# set up some things for unit testing, which uses Boost.Unittest
+# cmake install files, so other packages can find this library.
 #
-##################################
+####
+set(RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR "share/rgbmatrixlib/cmake")
+cmake_print_variables(RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR)
+cmake_print_variables(CMAKE_INSTALL_SYSCONFDIR)
+set(SYSCONFIG_INSTALL_DIR ${CMAKE_INSTALL_SYSCONFDIR}
+    CACHE PATH "Location of configuration files" )
+install(
+  EXPORT rgbmatrixlibTargets  # this name before Targets should match the name of the variable set above in a previous install call
+  NAMESPACE rgbmatrix::
+  DESTINATION ${RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR})
 
-# TODO make this conditional on wanting them actually built.
-# see https://github.com/bertiniteam/b2/issues/202
+include(CMakePackageConfigHelpers)
 
-#set(EXAMPLE_CORE_TEST_SOURCES
-#    test/test_core.cpp
-#)
-#
-#add_executable(test_core ${EXAMPLE_CORE_TEST_SOURCES})
-#target_include_directories(test_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/test)
+write_basic_package_version_file(
+  rgbmatrixlibConfigVersion.cmake
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion)
 
-#target_link_libraries(test_core ${Boost_LIBRARIES} example_core_lib)
-#add_test(NAME test_core COMMAND ${CMAKE_BINARY_DIR}/test_core)
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})  #set so we can use in configure_package_config_file()
+set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}) # ditto
 
-#enable_testing()
+configure_package_config_file(
+  "${PROJECT_SOURCE_DIR}/../cmake/rgbmatrixlibConfig.cmake.in" rgbmatrixlibConfig.cmake
+  PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR LIB_INSTALL_DIR
+  INSTALL_DESTINATION ${RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR}
+  )
+
+install(FILES "${PROJECT_BINARY_DIR}/rgbmatrixlibConfig.cmake"
+              "${PROJECT_BINARY_DIR}/rgbmatrixlibConfigVersion.cmake"
+        DESTINATION ${RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR})
