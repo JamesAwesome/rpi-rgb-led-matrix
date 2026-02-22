@@ -1,21 +1,15 @@
-# RGBMATRIX library cmake
+# CMake for rpi-rgb-led-matrix core library
 
-# Build with some guidance from
-# - https://github.com/scikit-build/scikit-build-sample-projects/
-# - https://runebook.dev/en/docs/cmake/command/install
+#cmake_minimum_required(VERSION 3.22)
+#project(
+#    rgbmatrix
+#    VERSION "0.0.1"
+#    LANGUAGES CXX)
+#set(CMAKE_CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#include(CMakePrintHelpers) # so we can print cmake variable values
 
-cmake_minimum_required(VERSION 3.22)
-project(
-    rgbmatrixlib
-    VERSION "0.0.1"
-    LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-include(CMakePrintHelpers) # so we can print cmake variable values
-
-cmake_print_variables(CMAKE_CURRENT_SOURCE_DIR)
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
+# cmake_print_variables(CMAKE_CURRENT_SOURCE_DIR)
 
 # Define the RGBMATRIX headers.
 set(RGBMATRIX_HEADERS
@@ -49,46 +43,55 @@ cmake_print_variables(RGBMATRIX_SOURCES)
 
 # Declare the library
 if(PROJECT_IS_TOP_LEVEL)
-    add_library(rgbmatrixlib)
+    add_library(rgbmatrix SHARED)
 endif()
 
 # Add the sources
-target_sources(rgbmatrixlib PRIVATE ${RGBMATRIX_SOURCES})
+target_sources(rgbmatrix PRIVATE ${RGBMATRIX_SOURCES})
 
 # Add include directories
-target_include_directories(rgbmatrixlib PUBLIC
+target_include_directories(rgbmatrix PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include> )
 
 # Install the library.
+#install(
+#    TARGETS rgbmatrix
+#    EXPORT rgbmatrixTargets
+#    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#)
 install(
-    TARGETS rgbmatrixlib
-    EXPORT rgbmatrixlibTargets
-    FILE_SET HEADERS
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib
-    RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include
+    TARGETS rgbmatrix
+    EXPORT rgbmatrixTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
-
+#install(
+#    TARGETS rgbmatrix
+#    EXPORT rgbmatrixTargets
+#    FILE_SET HEADERS
+#    LIBRARY DESTINATION lib
+#    ARCHIVE DESTINATION lib
+#    RUNTIME DESTINATION bin
+#    INCLUDES DESTINATION include
+#)
+cmake_print_variables(${rgbmatrixTargets})
 ####
 #
 # cmake install files, so other packages can find this library.
 #
 ####
-set(RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR "share/rgbmatrixlib/cmake")
-cmake_print_variables(RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR)
-cmake_print_variables(CMAKE_INSTALL_SYSCONFDIR)
-set(SYSCONFIG_INSTALL_DIR ${CMAKE_INSTALL_SYSCONFDIR}
-    CACHE PATH "Location of configuration files" )
+set(RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR "share/rgbmatrix/cmake")
+
+#set(SYSCONFIG_INSTALL_DIR ${CMAKE_INSTALL_SYSCONFDIR}
+#    CACHE PATH "Location of configuration files" )
 install(
-  EXPORT rgbmatrixlibTargets  # this name before Targets should match the name of the variable set above in a previous install call
+  EXPORT rgbmatrixTargets  # this name before Targets should match the name of the variable set above in a previous install call
   NAMESPACE rgbmatrix::
   DESTINATION ${RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR})
 
 include(CMakePackageConfigHelpers)
 
 write_basic_package_version_file(
-  rgbmatrixlibConfigVersion.cmake
+  rgbmatrixConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY SameMajorVersion)
 
@@ -96,11 +99,11 @@ set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR})  #set so we can use in conf
 set(LIB_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}) # ditto
 
 configure_package_config_file(
-  "${PROJECT_SOURCE_DIR}/../cmake/rgbmatrixlibConfig.cmake.in" rgbmatrixlibConfig.cmake
+  "${PROJECT_SOURCE_DIR}/cmake/rgbmatrixConfig.cmake.in" rgbmatrixConfig.cmake
   PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR LIB_INSTALL_DIR
   INSTALL_DESTINATION ${RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR}
   )
 
-install(FILES "${PROJECT_BINARY_DIR}/rgbmatrixlibConfig.cmake"
-              "${PROJECT_BINARY_DIR}/rgbmatrixlibConfigVersion.cmake"
+install(FILES "${PROJECT_BINARY_DIR}/rgbmatrixConfig.cmake"
+              "${PROJECT_BINARY_DIR}/rgbmatrixConfigVersion.cmake"
         DESTINATION ${RGBMATRIX_CMAKE_PACKAGE_INSTALL_SUBDIR})
