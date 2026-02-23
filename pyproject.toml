@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core", "cython", "cython-cmake", "pybind11>=2.12"]
+requires = ["scikit-build-core", "cython", "cython-cmake"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -10,12 +10,3 @@ authors = [{name="Christoph Friedrich", email="christoph.friedrich@vonaffenfels.
 license = "GPL-2.0-or-later"
 readme = "README.md"
 requires-python = ">=3.11"
-
-#[tool.scikit-build]
-#build.verbose = true
-#logging.level = "DEBUG"
-#
-#ext-modules = [
-#    {name = "core_ext", sources=["bindings/python/rgbmatrix/core.cpp"]},
-#    {name = "graphics_ext", sources=["bindings/python/rgbmatrix/graphics.cpp"]}
-#]
