@@ -321,6 +321,7 @@ static RaspberryPiModel DetermineRaspberryModel() {
   case 0x11: /* Pi 4 */
   case 0x13: /* Pi 400 */
   case 0x14: /* CM4 */
+  case 0x15: /* CM4S */
     return PI_MODEL_4;
 
   default:  /* a bunch of versions representing Pi 3 */
@@ -487,7 +488,7 @@ static void (*busy_wait_impl)(long) = busy_wait_nanos_rpi_3;
 static void WriteTo(const char *filename, const char *str) {
   const int fd = open(filename, O_WRONLY);
   if (fd < 0) return;
-  (void) write(fd, str, strlen(str));  // Best effort. Ignore return value.
+  if (write(fd, str, strlen(str))) {}  // Best effort. Ignore return value.
   close(fd);
 }
 
