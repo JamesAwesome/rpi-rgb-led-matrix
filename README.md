@@ -170,19 +170,14 @@ This documentation is split into parts that help you through the process
 
 Python Support
 --------------
-The python bindings are work in progress and being updated as of 2025/11, please subscribe to this bug and help out if you can:
+The python bindings have been overhauled as of February 2026 and are now built with scikit-build-core and cmake. While
+this update has been tested there are likely edge cases that have not been caught. Please subscribe to the master Python
+bug to assist or check for the latest updates.
 https://github.com/hzeller/rpi-rgb-led-matrix/issues/1749.
 
 The entire repository itself is PIP-able and can be installed as a package directly.
 ```
 pip install git+https://github.com/hzeller/rpi-rgb-led-matrix
-```
-While convenient, this won't install the demo executables (discussed below) which can be helpful for testing hardware.
-If you want to have `demo` available, clone the repo, build, then run pip against the local clone.
-```
-git clone https://github.com/hzeller/rpi-rgb-led-matrix
-cd rpi-rgb-led-matrix; make
-pip install .
 ```
 
 Rpi Hardware Support
