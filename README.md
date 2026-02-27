@@ -175,8 +175,9 @@ this update has been tested there are likely edge cases that have not been caugh
 bug to assist or check for the latest updates.
 https://github.com/hzeller/rpi-rgb-led-matrix/issues/1749.
 
-The entire repository itself is PIP-able and can be installed as a package directly.
+The entire repository itself is PIP-able and can be installed as a package directly. Python dev packages are required.
 ```
+sudo apt-get install python-dev-is-python3 python3-pil cython3
 pip install git+https://github.com/hzeller/rpi-rgb-led-matrix
 ```
 
