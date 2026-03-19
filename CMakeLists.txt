@@ -81,6 +81,34 @@ IF(DEFINED SKBUILD)
       DEPENDS ${PYBINDING_SOURCE_DIR}/graphics.pyx
       VERBATIM)
 
+    # Find Pillow include directory (contains Imaging.h)
+    execute_process(
+        COMMAND ${Python_EXECUTABLE} -c
+            "from PIL import __path__; print(__path__[0])"
+        OUTPUT_VARIABLE PILLOW_PATH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE PILLOW_RESULT
+    )
+    if(NOT PILLOW_RESULT EQUAL 0)
+        message(FATAL_ERROR "Pillow is not installed. Install it with: pip install Pillow")
+    endif()
+    set(PILLOW_INCLUDE_DIR "${PILLOW_PATH}/_imaging")
+    # Pillow >= 10.1 puts headers in the package directory
+    if(NOT EXISTS "${PILLOW_INCLUDE_DIR}/Imaging.h")
+        set(PILLOW_INCLUDE_DIR "${PILLOW_PATH}")
+    endif()
+    # Fall back to checking for libImaging in Pillow source layout
+    if(NOT EXISTS "${PILLOW_INCLUDE_DIR}/Imaging.h")
+        execute_process(
+            COMMAND ${Python_EXECUTABLE} -c
+                "import sysconfig; print(sysconfig.get_path('include'))"
+            OUTPUT_VARIABLE PYTHON_INCLUDE_DIR
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set(PILLOW_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
+    endif()
+    cmake_print_variables(PILLOW_INCLUDE_DIR)
+
     # Make the core extension
     python_add_library(core SHARED
         ${PYBINDING_SOURCE_DIR}/core.cpp
@@ -90,6 +118,7 @@ IF(DEFINED SKBUILD)
     set_target_properties(core PROPERTIES LINKER_LANGUAGE CXX)
     target_include_directories(core PRIVATE
         ${PYBINDING_SOURCE_DIR}/shims
+        ${PILLOW_INCLUDE_DIR}
         ${CMAKE_SOURCE_DIR}/include
     )
     # target_link_libraries(core PRIVATE rgbmatrix)
