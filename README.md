@@ -1,3 +1,21 @@
+> **This is a fork of [hzeller/rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix)** with fixes to the Python bindings build system. The upstream project migrated to CMake + scikit-build-core but introduced several issues that prevented `pip install` from working. This fork fixes them:
+>
+> - **Lowered Python requirement from 3.13 to 3.9** — most Raspberry Pi users are on Bullseye (3.9) or Bookworm (3.11)
+> - **Vendored the Pillow `ImagingMemoryInstance` struct** — the upstream build required Pillow's internal `Imaging.h` C header, which pip wheel installs don't ship. This made `pip install .` fail in Docker and on bare-metal Pi installs. The vendored struct eliminates the build-time Pillow dependency entirely.
+> - **Cleaned up CMakeLists.txt** — removed fragile Pillow header discovery, debug output, duplicate includes, and dead code
+> - **Added Cython `language_level=3str`** — ensures consistent behavior across Python 3.9-3.13
+>
+> ### Install
+>
+> ```bash
+> sudo apt-get install build-essential cmake python3-dev
+> pip install git+https://github.com/jamesawesome/rpi-rgb-led-matrix.git
+> ```
+>
+> That's it. No Pillow source builds, no `--no-build-isolation`, no header file workarounds.
+>
+> ---
+
 Controlling RGB LED display with Raspberry Pi GPIO
 ==================================================
 
