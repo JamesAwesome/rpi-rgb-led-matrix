@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core", "cython", "Pillow"]
+requires = ["scikit-build-core", "cython"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -10,3 +10,7 @@ authors = [{name="Christoph Friedrich", email="christoph.friedrich@vonaffenfels.
 license = "GPL-2.0-or-later"
 readme = "README.md"
 requires-python = ">=3.9"
+
+[project.optional-dependencies]
+pillow = ["Pillow>=9.0"]
+test = ["pytest>=8.0"]
