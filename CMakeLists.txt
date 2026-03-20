@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(rgbmatrix VERSION 0.0.1)
 include(GNUInstallDirs)
-find_package(Python 3.9 REQUIRED COMPONENTS Interpreter Development.Module)
+find_package(Python 3.9 REQUIRED COMPONENTS Interpreter Development.Module Development.Embed)
 
 # Build the core library
 set(RGBMATRIX_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
