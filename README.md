@@ -1,3 +1,21 @@
+# Fork notes — `jamesawesome/rpi-rgb-led-matrix`
+
+This is a fork of [hzeller/rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix). The default `main` branch differs from upstream:
+
+- Carries kingdo9's [`pi5_support`](https://github.com/hzeller/rpi-rgb-led-matrix/pull/1886) work — Pi 5 / RP1 GPIO support via PIO and RIO backends in `lib/rp1/`. Maintainer-approved upstream but not yet merged.
+- Adds one local patch on top: 42 anonymous `PIO` parameters in `lib/rp1/rp1_pio_vendor/piolib/pio_rp1.c` were given a name so the file builds under bullseye GCC 10 (Debian 11). Without that patch the upstream code only compiles under newer GCCs.
+- Adds a `CLAUDE.md` aimed at coding agents.
+
+Runtime SoC detection picks the correct GPIO path:
+- **BCM2711 / older**: classic GPIO bit-banging (Pi 4, Pi 3, ...)
+- **RP1**: PIO (default, low CPU) or RIO (`--led-rp1-rio=1`, faster, more CPU). For chain ≥ 2 with flicker, raise `--led-slowdown-gpio` from 2 to 3+.
+
+The pre-RP1 codebase (vanilla hzeller fork, Pi 4 only) is preserved on the [`pi4_legacy`](https://github.com/jamesawesome/rpi-rgb-led-matrix/tree/pi4_legacy) branch as a rollback point. **Once #1886 merges into `hzeller/master`, retire this fork** and downstream consumers should switch to upstream.
+
+The rest of this README is the upstream document, unmodified.
+
+---
+
 Controlling RGB LED display with Raspberry Pi GPIO
 ==================================================
 
