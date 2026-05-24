@@ -86,6 +86,10 @@ cdef class FrameCanvas(Canvas):
     def SetPixel(self, int x, int y, uint8_t red, uint8_t green, uint8_t blue):
         (<cppinc.FrameCanvas*>self._getCanvas()).SetPixel(x, y, red, green, blue)
 
+    def SubFill(self, int x, int y, int width, int height,
+                uint8_t red, uint8_t green, uint8_t blue):
+        (<cppinc.FrameCanvas*>self._getCanvas()).SubFill(
+            x, y, width, height, red, green, blue)
 
     property width:
         def __get__(self): return (<cppinc.FrameCanvas*>self._getCanvas()).width()
