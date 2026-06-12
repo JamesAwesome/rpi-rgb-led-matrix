@@ -10,7 +10,7 @@ This is a fork of [hzeller/rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rg
 
 Runtime SoC detection picks the correct GPIO path:
 - **BCM2711 / older**: classic GPIO bit-banging (Pi 4, Pi 3, ...)
-- **RP1**: PIO (default, low CPU) or RIO (`--led-rp1-rio=1`, faster, more CPU). For chain ≥ 2 with flicker, raise `--led-slowdown-gpio` from 2 to 3+.
+- **RP1**: RIO (default, faster but more CPU) or PIO (`--led-rp1-pio=1`, low CPU). For chain ≥ 2 with flicker, raise `--led-slowdown-gpio` from 2 to 3+.
 
 The pre-RP1 codebase is preserved on the [`pi4_legacy`](https://github.com/jamesawesome/rpi-rgb-led-matrix/tree/pi4_legacy) branch as a rollback point.
 
