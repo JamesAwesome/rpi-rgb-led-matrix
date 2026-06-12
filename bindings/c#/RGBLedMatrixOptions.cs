@@ -118,10 +118,10 @@ public struct RGBLedMatrixOptions
     public int GpioSlowdown = 1;
 
     /// <summary>
-    /// On Raspberry Pi 5-family boards, choose the experimental RP1 RIO backend instead of
-    /// the default RP1 PIO backend. 0 = PIO, 1 = RIO.
+    /// On Raspberry Pi 5-family boards, force the RP1 PIO backend.
+    /// 0 = default RP1 RIO, 1 = PIO.
     /// </summary>
-    public int Rp1Rio = 0;
+    public int Rp1Pio = 0;
 
     /// <summary>
     /// Creates default matrix settings.

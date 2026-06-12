@@ -404,7 +404,7 @@ struct RuntimeOptions {
   RuntimeOptions();
 
   int gpio_slowdown;    // 0 = no slowdown.    Flag: --led-slowdown-gpio
-  int rp1_rio;          // 0 = default PIO. 1 = RP1 RIO. Flag: --led-rp1-rio
+  int rp1_pio;          // 0 = default RP1 RIO. 1 = RP1 PIO. Flag: --led-rp1-pio
 
   // ----------
   // If the following options are set to disabled with -1, they are not

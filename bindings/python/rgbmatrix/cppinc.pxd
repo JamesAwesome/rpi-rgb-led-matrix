@@ -34,7 +34,7 @@ cdef extern from "led-matrix.h" namespace "rgb_matrix":
     struct RuntimeOptions:
       RuntimeOptions() except +
       int gpio_slowdown
-      int rp1_rio
+      int rp1_pio
       int daemon
       int drop_privileges
       bool do_gpio_init

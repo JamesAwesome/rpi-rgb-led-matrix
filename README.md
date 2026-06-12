@@ -105,12 +105,12 @@ also the B+ models, the Pi Zero, Raspberry Pi 2,3,4 and 5 with 40 pins, as well
 as the Compute Modules which have 44 GPIOs.
 
 #### Raspberry Pi 5 support has now been added.
-There are two modes to run this on the Pi 5 
+There are two modes to run this on the Pi 5
 
-**--led-rp1-rio=0** - Uses the Pi 5 coprocessor RP1 to perform the work (default) - Very minimal CPU usage
+**--led-rp1-pio=0** - Uses the Pi 5 RP1 RIO backend (default) - Higher CPU usage but much faster performance.
 
-**--led-rp1-rio=1** - Uses Registered IO block of RP1 to communicate with the GPIO - Higher CPU usage but much faster performance.\
-**NOTE: --led-slowdown-gpio** can have the opposite effect in this mode, so going from 2 to 3 may increase performance slightly with --led-rp1-rio=1.
+**--led-rp1-pio=1** - Uses the Pi 5 RP1 PIO backend - Very minimal CPU usage.
+**NOTE: --led-slowdown-gpio** can have the opposite effect in RIO mode, so going from 2 to 3 may increase performance slightly with --led-rp1-pio=0.
 
 Pi 5 Discussion -  https://github.com/hzeller/rpi-rgb-led-matrix/issues/1603
 
