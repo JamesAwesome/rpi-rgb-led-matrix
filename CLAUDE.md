@@ -11,7 +11,7 @@ This is the `jamesawesome` fork. The default `main` branch is based on kingdo9's
 Selected at runtime:
 
 - **BCM2711 (Pi 4 / Pi 3 / earlier)**: classic GPIO path in `lib/gpio.cc` + `lib/framebuffer.cc`.
-- **RP1 (Pi 5)**: `lib/rp1/rp1_pio_backend.cc` (PIO mode, low CPU) or `lib/rp1/rp1_rio_backend.cc` (RIO mode, faster but more CPU). Vendored piolib under `lib/rp1/rp1_pio_vendor/`. The CLI accepts `--led-rp1-rio=0|1` to pick the backend (default 0 = PIO). For chain ≥ 2 with flicker, raise `--led-slowdown-gpio` from 2 to 3+.
+- **RP1 (Pi 5)**: `lib/rp1/rp1_rio_backend.cc` (RIO mode, default, faster but more CPU) or `lib/rp1/rp1_pio_backend.cc` (PIO mode, low CPU). Vendored piolib under `lib/rp1/rp1_pio_vendor/`. The CLI accepts `--led-rp1-pio=0|1` to pick the backend (default 0 = RIO; 1 forces PIO). The old `--led-rp1-rio` flag and `RuntimeOptions::rp1_rio` field were renamed to `rp1_pio` upstream (June 2026) — the default backend flipped from PIO to RIO at the same time. For chain ≥ 2 with flicker, raise `--led-slowdown-gpio` from 2 to 3+ (range now 0..60).
 
 ## Build
 

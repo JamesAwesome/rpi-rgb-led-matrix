@@ -712,20 +712,20 @@ RGBMatrix *RGBMatrix::CreateFromOptions(const RGBMatrix::Options &options,
   // For the Pi4, we might need 2, maybe up to 4. Let's open up to 5.
   // on supported architectures, -1 will emit memory barier (DSB ST) after GPIO write
   if (runtime_options.gpio_slowdown < (LED_MATRIX_ALLOW_BARRIER_DELAY ? -1 : 0)
-      || runtime_options.gpio_slowdown > 10) {
+      || runtime_options.gpio_slowdown > 60) {
     fprintf(stderr, "--led-slowdown-gpio=%d is outside usable range\n",
             runtime_options.gpio_slowdown);
     return NULL;
   }
-  if (runtime_options.rp1_rio != 0 && runtime_options.rp1_rio != 1) {
-    fprintf(stderr, "--led-rp1-rio=%d is outside usable range 0..1\n",
-            runtime_options.rp1_rio);
+  if (runtime_options.rp1_pio != 0 && runtime_options.rp1_pio != 1) {
+    fprintf(stderr, "--led-rp1-pio=%d is outside usable range 0..1\n",
+            runtime_options.rp1_pio);
     return NULL;
   }
 
   // Use file-scope GPIO instance.
   GPIO &io = s_global_io;
-  Rp1RioSetEnabled(runtime_options.rp1_rio > 0);
+  Rp1RioSetEnabled(runtime_options.rp1_pio == 0);
   const bool use_rp1_rio = runtime_options.do_gpio_init
       && Rp1RioShouldActivate(options.hardware_mapping,
                               options.row_address_type,
@@ -747,19 +747,19 @@ RGBMatrix *RGBMatrix::CreateFromOptions(const RGBMatrix::Options &options,
       && !use_rp1_pio && !use_rp1_rio) {
     if (Rp1RioBackendRequested()) {
       fprintf(stderr,
-              "Pi 5-family RP1 RIO backend was requested via "
-              "--led-rp1-rio=1, but this configuration is not "
-              "supported yet.\n"
-              "Supported for now: mappings "
+              "Pi 5-family RP1 RIO backend is selected, but this "
+              "configuration is not supported yet.\n"
+              "RIO supports mappings "
               "regular/adafruit-hat/adafruit-hat-pwm/classic and "
-              "--led-row-addr-type=0 or 2.\n");
+              "--led-row-addr-type=0, 1, 2, 3, 4, or 5.\n"
+              "For configurations supported by PIO, use --led-rp1-pio=1.\n");
     } else {
       fprintf(stderr,
-              "Pi 5-family RP1 backend is available, but this configuration is not "
-              "supported yet.\n"
-              "Supported for now: mappings "
-              "regular/adafruit-hat/adafruit-hat-pwm/classic and "
-              "--led-row-addr-type=0 or 2.\n");
+              "Pi 5-family RP1 PIO backend is selected, but this "
+              "configuration is not supported yet.\n"
+              "Supported in PIO mode for now: mappings "
+              "regular/regular-pi1/adafruit-hat/adafruit-hat-pwm/classic and "
+              "--led-row-addr-type=0, 1, 2, 3, 4, or 5.\n");
     }
     return NULL;
   }

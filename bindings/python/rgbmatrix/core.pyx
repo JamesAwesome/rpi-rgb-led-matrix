@@ -203,9 +203,9 @@ cdef class RGBMatrixOptions:
         def __get__(self): return self.__runtime_options.gpio_slowdown
         def __set__(self, uint8_t value): self.__runtime_options.gpio_slowdown = value
 
-    property rp1_rio:
-        def __get__(self): return self.__runtime_options.rp1_rio
-        def __set__(self, uint8_t value): self.__runtime_options.rp1_rio = value
+    property rp1_pio:
+        def __get__(self): return self.__runtime_options.rp1_pio
+        def __set__(self, uint8_t value): self.__runtime_options.rp1_pio = value
 
     property daemon:
         def __get__(self): return self.__runtime_options.daemon
