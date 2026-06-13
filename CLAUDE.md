@@ -4,7 +4,13 @@
 
 C++ library for controlling RGB LED display matrices on Raspberry Pi GPIO. Supports Pi 4 (BCM2711) and Pi 5 (RP1) — the SoC is detected at runtime and the appropriate GPIO backend is selected. Includes Python bindings (Cython), C bindings, and C# bindings.
 
-This is the `jamesawesome` fork. The default `main` branch is based on kingdo9's `pi5_support` branch (upstream PR [hzeller#1886](https://github.com/hzeller/rpi-rgb-led-matrix/pull/1886), maintainer-approved) with one local patch: 42 anonymous `PIO` parameters in `lib/rp1/rp1_pio_vendor/piolib/pio_rp1.c` were given a name so the file builds under bullseye GCC 10 (Debian 11). The pre-RP1 codebase is preserved on the `pi4_legacy` branch as a rollback point. Once #1886 merges into `hzeller/master`, retire this fork.
+This is the `jamesawesome` fork. The default `main` branch tracks `hzeller/master` (which now includes the Pi 5 / RP1 support from PR [hzeller#1886](https://github.com/hzeller/rpi-rgb-led-matrix/pull/1886)) plus three local patches that are not upstream:
+
+- **GCC 10 build fix** — 42 anonymous `PIO` parameters in `lib/rp1/rp1_pio_vendor/piolib/pio_rp1.c` were given names so the file builds under bullseye GCC 10 (Debian 11).
+- **Pillow shim** — `bindings/python/rgbmatrix/shims/pillow.c` vendors the `ImagingMemoryInstance` struct so `SetPixelsPillow` compiles without a Pillow dev-header dependency.
+- **SubFill Python binding** — `FrameCanvas.SubFill` is exposed in the Cython bindings (the C++ impl exists upstream but isn't bridged to Python there).
+
+We are keeping this fork for now (decision: 2026-06-13). Because those three patches aren't upstream, the workflow is to periodically sync `upstream/master` into `main` rather than retire the fork. If all three patches eventually land upstream, revisit retiring it. The pre-RP1 codebase is preserved on the `pi4_legacy` branch as a rollback point.
 
 ## Hardware Backends
 
